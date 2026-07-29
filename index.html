@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>TokenCart Demo — Earn Tokens, Unlock Products</title>
+<meta name="robots" content="noindex,nofollow" />
+<style>
+:root{
+  --bg:#07110d;--panel:#0e1b15;--panel2:#14241c;--line:#25382f;
+  --text:#eef8f2;--muted:#95aa9d;--green:#36e58c;--green2:#10b981;
+  --gold:#ffd166;--red:#ff6b6b;--blue:#68a9ff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(180deg,#06100c,#0a1510 50%,#06100c);color:var(--text);min-height:100vh}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.demo-banner{position:sticky;top:0;z-index:1000;background:var(--gold);color:#1a1500;text-align:center;padding:9px 14px;font-weight:900;letter-spacing:.8px;font-size:12px}
+.app{max-width:520px;margin:auto;min-height:100vh;padding-bottom:92px}
+header{padding:18px 16px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:10px}.logo{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,var(--green),var(--green2));display:grid;place-items:center;color:#032114;font-size:22px;font-weight:950}.brand h1{font-size:18px}.brand p{font-size:11px;color:var(--muted)}
+.token-pill{background:rgba(54,229,140,.1);border:1px solid rgba(54,229,140,.35);border-radius:14px;padding:8px 11px;text-align:right}.token-pill b{display:block;color:var(--green);font-size:17px}.token-pill span{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px}
+main{padding:0 16px}.screen{display:none}.screen.active{display:block}
+.hero{background:linear-gradient(135deg,rgba(54,229,140,.15),rgba(104,169,255,.09));border:1px solid rgba(54,229,140,.28);border-radius:22px;padding:20px;margin-bottom:15px}.eyebrow{font-size:10px;color:var(--green);font-weight:900;letter-spacing:1.1px;text-transform:uppercase}.hero h2{font-size:25px;line-height:1.15;margin:8px 0}.hero p{font-size:13px;color:var(--muted);line-height:1.6}.hero-actions{display:grid;grid-template-columns:1.2fr .8fr;gap:9px;margin-top:16px}
+.btn{border:0;border-radius:12px;padding:13px 14px;font-weight:900}.btn.primary{background:var(--green);color:#032114}.btn.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}.btn.danger{background:rgba(255,107,107,.13);color:var(--red);border:1px solid rgba(255,107,107,.3)}.btn:disabled{opacity:.45;cursor:not-allowed}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:17px}.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center}.stat b{display:block;font-size:18px;color:var(--green)}.stat span{font-size:10px;color:var(--muted)}
+.section-head{display:flex;justify-content:space-between;align-items:end;margin:18px 2px 10px}.section-head h3{font-size:16px}.section-head p{font-size:10px;color:var(--muted)}
+.product-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.product{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden}.product-art{height:110px;background:linear-gradient(135deg,#19382a,#12251d);display:grid;place-items:center;font-size:50px;position:relative}.product-lock{position:absolute;right:8px;top:8px;background:rgba(0,0,0,.55);border-radius:20px;padding:5px 8px;font-size:10px}.product-body{padding:12px}.product h4{font-size:14px;margin-bottom:4px}.product p{font-size:10px;color:var(--muted);line-height:1.4;min-height:29px}.need{font-size:12px;color:var(--gold);font-weight:850;margin:8px 0}.progress{height:7px;border-radius:99px;background:#08110d;overflow:hidden;border:1px solid var(--line)}.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--green2),var(--green));border-radius:99px}.product .btn{width:100%;margin-top:9px;padding:10px;font-size:11px}
+.task{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:13px;margin-bottom:9px;display:flex;align-items:center;gap:11px}.task-icon{width:42px;height:42px;border-radius:12px;background:var(--panel2);display:grid;place-items:center;font-size:21px;flex:0 0 auto}.task-info{flex:1}.task-info b{font-size:13px}.task-info p{font-size:10px;color:var(--muted);line-height:1.45;margin-top:3px}.reward{font-size:11px;color:var(--green);font-weight:900}.task .btn{padding:9px 11px;font-size:10px}.task.done{opacity:.55}.task.pending{border-color:rgba(255,209,102,.45)}
+.share-card{background:linear-gradient(135deg,rgba(37,211,102,.13),rgba(54,229,140,.06));border:1px solid rgba(37,211,102,.35);border-radius:18px;padding:16px;margin-bottom:12px}.share-card h3{font-size:17px}.share-card p{font-size:11px;color:var(--muted);line-height:1.55;margin:6px 0 12px}.share-box{background:#07110d;border:1px solid var(--line);border-radius:12px;padding:11px;font-size:11px;color:#cce2d4;word-break:break-all}.share-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}.note{font-size:10px;color:var(--muted);line-height:1.5;margin-top:8px}
+.history{background:var(--panel);border:1px solid var(--line);border-radius:15px;overflow:hidden}.history-row{display:flex;align-items:center;justify-content:space-between;padding:12px;border-bottom:1px solid var(--line)}.history-row:last-child{border-bottom:none}.history-row b{font-size:12px}.history-row small{display:block;color:var(--muted);font-size:9px;margin-top:2px}.plus{color:var(--green);font-weight:900;font-size:12px}.minus{color:var(--gold);font-weight:900;font-size:12px}
+.order-card{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:14px;margin-bottom:9px}.order-top{display:flex;justify-content:space-between;gap:10px}.order-card h4{font-size:14px}.status{font-size:9px;padding:5px 8px;border-radius:99px;background:rgba(255,209,102,.12);color:var(--gold);height:max-content}.order-card p{font-size:10px;color:var(--muted);margin-top:6px;line-height:1.5}
+nav{position:fixed;bottom:0;left:0;right:0;max-width:520px;margin:auto;background:rgba(7,17,13,.95);backdrop-filter:blur(12px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:8px 8px calc(8px + env(safe-area-inset-bottom));z-index:900}.nav-btn{border:0;background:none;color:var(--muted);padding:6px 2px;font-size:9px;font-weight:700}.nav-btn span{display:block;font-size:20px;margin-bottom:2px}.nav-btn.active{color:var(--green)}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:2000;display:none;place-items:end center;padding:0}.modal.show{display:grid}.sheet{width:100%;max-width:520px;background:#0d1913;border:1px solid var(--line);border-radius:22px 22px 0 0;padding:18px;max-height:88vh;overflow:auto}.sheet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.close{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:var(--text)}.field{margin-bottom:12px}.field label{display:block;font-size:10px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.6px;margin-bottom:5px}.field input,.field select,.field textarea{width:100%;background:#07110d;border:1px solid var(--line);border-radius:11px;padding:12px;color:var(--text);outline:none}.field textarea{min-height:75px;resize:vertical}.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--green)}
+.admin-card{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:14px;margin-bottom:10px}.admin-card h4{font-size:14px;margin-bottom:7px}.admin-card p{font-size:10px;color:var(--muted);line-height:1.5}.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.empty{text-align:center;padding:35px 16px;color:var(--muted);font-size:12px}
+.toast{position:fixed;left:50%;bottom:92px;transform:translate(-50%,30px);opacity:0;background:#13251c;border:1px solid var(--line);padding:11px 15px;border-radius:12px;font-size:11px;z-index:3000;transition:.25s;max-width:88%;text-align:center}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:350px){.product-grid{grid-template-columns:1fr}.hero-actions,.share-actions{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="demo-banner">DEMO BUILD — Token rewards and orders are stored only on this device</div>
+<div class="app">
+<header>
+  <div class="brand"><div class="logo">T</div><div><h1>TokenCart</h1><p>Earn tokens. Unlock products.</p></div></div>
+  <div class="token-pill"><b id="headerTokens">0</b><span>Approved tokens</span></div>
+</header>
+<main>
+<section class="screen active" id="homeScreen">
+  <div class="hero">
+    <div class="eyebrow">Reward-powered ordering</div>
+    <h2>Complete activities. Unlock real product orders.</h2>
+    <p>No payment is collected in this demo. Users build an approved token balance through tasks and measurable referral activity, then spend those tokens to unlock products.</p>
+    <div class="hero-actions"><button class="btn primary" onclick="showScreen('earnScreen')">Earn tokens</button><button class="btn secondary" onclick="showScreen('productsScreen')">View products</button></div>
+  </div>
+  <div class="stats">
+    <div class="stat"><b id="approvedStat">0</b><span>Approved</span></div>
+    <div class="stat"><b id="pendingStat">0</b><span>Pending</span></div>
+    <div class="stat"><b id="referralStat">0</b><span>Referrals</span></div>
+  </div>
+  <div class="section-head"><div><h3>Closest unlocks</h3><p>Products nearest to your balance</p></div></div>
+  <div class="product-grid" id="homeProducts"></div>
+  <div class="section-head"><div><h3>Recent token activity</h3><p>Approved and spent tokens</p></div></div>
+  <div class="history" id="homeHistory"></div>
+</section>
+
+<section class="screen" id="productsScreen">
+  <div class="section-head"><div><h3>Product catalogue</h3><p>Tokens are the only unlock requirement</p></div></div>
+  <div class="product-grid" id="productGrid"></div>
+</section>
+
+<section class="screen" id="earnScreen">
+  <div class="share-card">
+    <h3>Share your referral link</h3>
+    <p>Sharing is a major earning method. A share action earns a small pending reward; larger rewards should come from measurable referral visits or verified signups when a backend is connected.</p>
+    <div class="share-box" id="referralLink"></div>
+    <div class="share-actions"><button class="btn primary" onclick="shareWhatsApp()">Share on WhatsApp</button><button class="btn secondary" onclick="copyReferral()">Copy link</button></div>
+    <div class="note">This demo records that the user opened the share action. It does not claim to inspect or confirm private WhatsApp delivery.</div>
+  </div>
+  <div class="section-head"><div><h3>Available earning tasks</h3><p>Direct links can be edited in Demo Admin</p></div></div>
+  <div id="taskList"></div>
+</section>
+
+<section class="screen" id="ordersScreen">
+  <div class="section-head"><div><h3>My orders</h3><p>Unlocked with approved tokens</p></div></div>
+  <div id="orderList"></div>
+</section>
+
+<section class="screen" id="adminScreen">
+  <div class="hero">
+    <div class="eyebrow">Demo administration</div>
+    <h2>Configure products and direct-link tasks.</h2>
+    <p>Changes here are saved to this browser only. Production will later move products, tasks, token approvals and orders to Supabase.</p>
+  </div>
+  <div class="admin-card"><h4>Add a direct-link task</h4><p>Add your campaign or activity URL, token reward and return timer.</p><div class="admin-grid"><button class="btn primary" onclick="openTaskEditor()">Add task</button><button class="btn secondary" onclick="resetDemo()">Reset demo data</button></div></div>
+  <div class="admin-card"><h4>Add a product</h4><p>Create another token-locked product for the catalogue.</p><button class="btn primary" style="width:100%;margin-top:10px" onclick="openProductEditor()">Add product</button></div>
+  <div class="admin-card"><h4>Demo referral event</h4><p>Use this only to preview how a verified referral would credit tokens after backend verification.</p><button class="btn secondary" style="width:100%;margin-top:10px" onclick="simulateReferral()">Simulate verified referral</button></div>
+</section>
+</main>
+<nav>
+  <button class="nav-btn active" data-screen="homeScreen" onclick="showScreen('homeScreen',this)"><span>🏠</span>Home</button>
+  <button class="nav-btn" data-screen="productsScreen" onclick="showScreen('productsScreen',this)"><span>🎁</span>Products</button>
+  <button class="nav-btn" data-screen="earnScreen" onclick="showScreen('earnScreen',this)"><span>⚡</span>Earn</button>
+  <button class="nav-btn" data-screen="ordersScreen" onclick="showScreen('ordersScreen',this)"><span>📦</span>Orders</button>
+  <button class="nav-btn" data-screen="adminScreen" onclick="showScreen('adminScreen',this)"><span>⚙️</span>Demo Admin</button>
+</nav>
+</div>
+
+<div class="modal" id="orderModal"><div class="sheet">
+  <div class="sheet-head"><h3>Place token order</h3><button class="close" onclick="closeModal('orderModal')">×</button></div>
+  <div id="orderProductSummary"></div>
+  <div class="field"><label>Full name</label><input id="orderName" placeholder="Recipient name" /></div>
+  <div class="field"><label>Phone number</label><input id="orderPhone" type="tel" placeholder="080..." /></div>
+  <div class="field"><label>Delivery address</label><textarea id="orderAddress" placeholder="Enter a complete delivery address"></textarea></div>
+  <button class="btn primary" style="width:100%" onclick="submitOrder()">Submit order using tokens</button>
+  <p class="note">Demo orders are not sent to a supplier. Production orders will require admin review, stock checks and fulfilment tracking.</p>
+</div></div>
+
+<div class="modal" id="taskModal"><div class="sheet">
+  <div class="sheet-head"><h3>Add direct-link task</h3><button class="close" onclick="closeModal('taskModal')">×</button></div>
+  <div class="field"><label>Task title</label><input id="taskTitle" placeholder="Visit today’s partner activity" /></div>
+  <div class="field"><label>Direct link</label><input id="taskUrl" type="url" placeholder="https://..." /></div>
+  <div class="field"><label>Token reward</label><input id="taskReward" type="number" min="1" value="25" /></div>
+  <div class="field"><label>Required seconds before return</label><input id="taskSeconds" type="number" min="5" value="15" /></div>
+  <button class="btn primary" style="width:100%" onclick="saveTask()">Save task</button>
+</div></div>
+
+<div class="modal" id="productModal"><div class="sheet">
+  <div class="sheet-head"><h3>Add token-locked product</h3><button class="close" onclick="closeModal('productModal')">×</button></div>
+  <div class="field"><label>Product name</label><input id="productName" placeholder="Portable Bluetooth Speaker" /></div>
+  <div class="field"><label>Description</label><textarea id="productDescription" placeholder="Short product description"></textarea></div>
+  <div class="field"><label>Emoji image</label><input id="productEmoji" value="🎁" maxlength="4" /></div>
+  <div class="field"><label>Required tokens</label><input id="productTokens" type="number" min="10" value="1000" /></div>
+  <button class="btn primary" style="width:100%" onclick="saveProduct()">Save product</button>
+</div></div>
+<div class="toast" id="toast"></div>
+<script>
+const STORAGE_KEY='tokencart-demo-v1';
+const DEFAULT_PRODUCTS=[
+  {id:'earbuds',name:'Wireless Earbuds',description:'Compact earbuds with charging case.',emoji:'🎧',tokens:650},
+  {id:'speaker',name:'Mini Bluetooth Speaker',description:'Portable speaker for everyday listening.',emoji:'🔊',tokens:900},
+  {id:'watch',name:'Smart Fitness Watch',description:'Activity tracking and notification support.',emoji:'⌚',tokens:1450},
+  {id:'phone',name:'Budget Smartphone',description:'Entry-level smartphone product goal.',emoji:'📱',tokens:4200},
+  {id:'laptop',name:'Student Laptop',description:'High-value long-term token goal.',emoji:'💻',tokens:12000}
+];
+const DEFAULT_TASKS=[
+  {id:'daily',title:'Daily check-in',description:'Return each day and claim today’s check-in tokens.',icon:'📅',reward:15,type:'daily',seconds:0,url:'',done:false,lastDone:''},
+  {id:'profile',title:'Complete your profile',description:'Add delivery-ready contact details for future orders.',icon:'👤',reward:30,type:'instant',seconds:0,url:'',done:false},
+  {id:'partner1',title:'Visit featured activity',description:'Open the configured direct link, remain for the timer, then return.',icon:'🔗',reward:25,type:'link',seconds:15,url:'https://example.com',done:false},
+  {id:'partner2',title:'Explore today’s campaign',description:'Complete another configured direct-link activity.',icon:'🎯',reward:35,type:'link',seconds:20,url:'https://example.com',done:false}
+];
+function freshState(){return{approved:0,pending:0,referrals:0,referralCode:'TC'+Math.random().toString(36).slice(2,9).toUpperCase(),products:structuredClone(DEFAULT_PRODUCTS),tasks:structuredClone(DEFAULT_TASKS),orders:[],history:[],pendingTask:null,selectedProduct:null}}
+let state=loadState();
+function loadState(){try{return{...freshState(),...JSON.parse(localStorage.getItem(STORAGE_KEY)||'null')}}catch{return freshState()}}
+function saveState(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state));renderAll()}
+function toast(text){const el=document.getElementById('toast');el.textContent=text;el.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove('show'),2600)}
+function showScreen(id,button){document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===id));document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.screen===id));scrollTo({top:0,behavior:'smooth'});renderAll()}
+function closeModal(id){document.getElementById(id).classList.remove('show')}
+function addHistory(label,amount,type='plus'){state.history.unshift({id:Date.now()+Math.random(),label,amount,type,time:new Date().toLocaleString('en-NG')});state.history=state.history.slice(0,30)}
+function addApproved(amount,label){state.approved+=Number(amount);addHistory(label,Number(amount),'plus');saveState()}
+function addPending(amount,label){state.pending+=Number(amount);addHistory(label+' — pending verification',Number(amount),'plus');saveState()}
+function productCard(product){const pct=Math.min(100,Math.round(state.approved/product.tokens*100));const unlocked=state.approved>=product.tokens;return `<article class="product"><div class="product-art">${product.emoji}<span class="product-lock">${unlocked?'🔓 Unlocked':'🔒 Locked'}</span></div><div class="product-body"><h4>${escapeHtml(product.name)}</h4><p>${escapeHtml(product.description)}</p><div class="need">${product.tokens.toLocaleString()} tokens</div><div class="progress"><i style="width:${pct}%"></i></div><button class="btn ${unlocked?'primary':'secondary'}" onclick="openOrder('${product.id}')" ${unlocked?'':'disabled'}>${unlocked?'Order with tokens':`${Math.max(0,product.tokens-state.approved).toLocaleString()} remaining`}</button></div></article>`}
+function renderProducts(){const sorted=[...state.products].sort((a,b)=>Math.max(0,a.tokens-state.approved)-Math.max(0,b.tokens-state.approved));document.getElementById('productGrid').innerHTML=sorted.map(productCard).join('');document.getElementById('homeProducts').innerHTML=sorted.slice(0,2).map(productCard).join('')}
+function renderTasks(){const today=new Date().toISOString().slice(0,10);document.getElementById('taskList').innerHTML=state.tasks.map(task=>{const dailyDone=task.type==='daily'&&task.lastDone===today;const done=task.type==='daily'?dailyDone:task.done;const pending=state.pendingTask?.id===task.id;return `<div class="task ${done?'done':''} ${pending?'pending':''}"><div class="task-icon">${task.icon||'⚡'}</div><div class="task-info"><b>${escapeHtml(task.title)}</b><p>${escapeHtml(task.description||'Complete this activity to earn tokens.')}</p></div><div><div class="reward">+${task.reward}</div><button class="btn ${done?'secondary':'primary'}" onclick="startTask('${task.id}')" ${done?'disabled':''}>${done?'Done':pending?'Waiting':'Start'}</button></div></div>`}).join('')}
+function renderOrders(){const host=document.getElementById('orderList');if(!state.orders.length){host.innerHTML='<div class="empty">No orders yet. Earn enough approved tokens to unlock a product.</div>';return}host.innerHTML=state.orders.map(order=>`<div class="order-card"><div class="order-top"><h4>${escapeHtml(order.productName)}</h4><span class="status">${escapeHtml(order.status)}</span></div><p>Order ${order.id}<br>${order.tokens.toLocaleString()} tokens spent · ${escapeHtml(order.createdAt)}<br>Recipient: ${escapeHtml(order.name)}</p></div>`).join('')}
+function renderHistory(){const html=state.history.length?state.history.slice(0,7).map(item=>`<div class="history-row"><div><b>${escapeHtml(item.label)}</b><small>${escapeHtml(item.time)}</small></div><span class="${item.type}">${item.type==='minus'?'-':'+'}${item.amount.toLocaleString()}</span></div>`).join(''):'<div class="empty">Complete an activity to start earning tokens.</div>';document.getElementById('homeHistory').innerHTML=html}
+function renderAll(){document.getElementById('headerTokens').textContent=state.approved.toLocaleString();document.getElementById('approvedStat').textContent=state.approved.toLocaleString();document.getElementById('pendingStat').textContent=state.pending.toLocaleString();document.getElementById('referralStat').textContent=state.referrals.toLocaleString();document.getElementById('referralLink').textContent=`${location.origin}${location.pathname}?ref=${state.referralCode}`;renderProducts();renderTasks();renderOrders();renderHistory()}
+function startTask(id){const task=state.tasks.find(t=>t.id===id);if(!task)return;const today=new Date().toISOString().slice(0,10);if(task.type==='daily'){if(task.lastDone===today)return toast('Today’s check-in is already completed.');task.lastDone=today;addApproved(task.reward,'Daily check-in');return}if(task.type==='instant'){task.done=true;addApproved(task.reward,task.title);return}if(task.type==='link'){if(!/^https?:\/\//i.test(task.url))return toast('This task needs a valid direct link in Demo Admin.');state.pendingTask={id:task.id,openedAt:Date.now(),returnAfter:Date.now()+task.seconds*1000};saveState();window.open(task.url,'_blank','noopener,noreferrer');toast(`Return after ${task.seconds} seconds to claim.`)}}
+function checkPendingTask(){if(!state.pendingTask)return;const task=state.tasks.find(t=>t.id===state.pendingTask.id);if(!task){state.pendingTask=null;saveState();return}if(Date.now()<state.pendingTask.returnAfter){toast(`Stay on the activity a little longer before returning.`);return}task.done=true;state.pendingTask=null;addApproved(task.reward,task.title)}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')checkPendingTask()});window.addEventListener('pageshow',checkPendingTask);
+function shareWhatsApp(){const link=`${location.origin}${location.pathname}?ref=${state.referralCode}`;const message=`🎁 I’m earning tokens on TokenCart to unlock products without paying.\nJoin with my link and complete activities too:\n${link}\n\nDemo note: token rewards are subject to verification.`;addPending(5,'Share action recorded');window.open(`https://wa.me/?text=${encodeURIComponent(message)}`,'_blank','noopener,noreferrer')}
+async function copyReferral(){const link=`${location.origin}${location.pathname}?ref=${state.referralCode}`;try{await navigator.clipboard.writeText(link);toast('Referral link copied.')}catch{prompt('Copy your referral link:',link)}}
+function simulateReferral(){state.referrals+=1;addApproved(50,'Verified referral — demo simulation');toast('Demo referral credited. Production will require backend verification.')}
+function openOrder(id){const product=state.products.find(p=>p.id===id);if(!product||state.approved<product.tokens)return toast('You have not unlocked this product yet.');state.selectedProduct=id;document.getElementById('orderProductSummary').innerHTML=`<div class="admin-card"><h4>${product.emoji} ${escapeHtml(product.name)}</h4><p>This order will spend <b style="color:var(--gold)">${product.tokens.toLocaleString()} tokens</b>. No payment will be requested.</p></div>`;document.getElementById('orderModal').classList.add('show')}
+function submitOrder(){const product=state.products.find(p=>p.id===state.selectedProduct);const name=document.getElementById('orderName').value.trim(),phone=document.getElementById('orderPhone').value.trim(),address=document.getElementById('orderAddress').value.trim();if(!product||state.approved<product.tokens)return toast('Product is no longer unlocked.');if(name.length<2||phone.length<7||address.length<8)return toast('Complete the recipient and delivery details.');state.approved-=product.tokens;addHistory(`Order placed: ${product.name}`,product.tokens,'minus');state.orders.unshift({id:'ORD-'+Date.now().toString(36).toUpperCase(),productId:product.id,productName:product.name,tokens:product.tokens,name,phone,address,status:'Awaiting admin review',createdAt:new Date().toLocaleString('en-NG')});state.selectedProduct=null;closeModal('orderModal');saveState();showScreen('ordersScreen');toast('Demo order submitted for admin review.')}
+function openTaskEditor(){document.getElementById('taskModal').classList.add('show')}
+function saveTask(){const title=document.getElementById('taskTitle').value.trim(),url=document.getElementById('taskUrl').value.trim(),reward=Number(document.getElementById('taskReward').value),seconds=Number(document.getElementById('taskSeconds').value);if(!title||!/^https?:\/\//i.test(url)||reward<1||seconds<5)return toast('Enter a title, valid link, reward and timer.');state.tasks.push({id:'task-'+Date.now(),title,description:'Open the configured direct link, remain for the timer, then return.',icon:'🔗',reward,type:'link',seconds,url,done:false});closeModal('taskModal');saveState();toast('Direct-link task added.')}
+function openProductEditor(){document.getElementById('productModal').classList.add('show')}
+function saveProduct(){const name=document.getElementById('productName').value.trim(),description=document.getElementById('productDescription').value.trim(),emoji=document.getElementById('productEmoji').value.trim()||'🎁',tokens=Number(document.getElementById('productTokens').value);if(!name||!description||tokens<10)return toast('Complete the product details and token requirement.');state.products.push({id:'product-'+Date.now(),name,description,emoji,tokens});closeModal('productModal');saveState();toast('Product added to the demo catalogue.')}
+function resetDemo(){if(!confirm('Reset every demo token, task and order on this device?'))return;state=freshState();saveState();toast('Demo data reset.')}
+function escapeHtml(value){const div=document.createElement('div');div.textContent=String(value??'');return div.innerHTML}
+renderAll();
+</script>
+</body>
+</html>
