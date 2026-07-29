@@ -1,101 +1,111 @@
-# TokenCart Demo
+# MAIN Demo Marketplace
 
-TokenCart is a demo-first reward-powered ordering platform.
+MAIN is a demo-first earn-to-order product marketplace.
 
-Users complete activities and measurable referral actions to earn platform tokens. Approved tokens are spent to unlock product orders. The demo does not collect money.
+Users choose a product goal, earn approved platform tokens through sharing, verified referrals and configured activities, complete an order checklist, and then submit a delivery request without paying money.
 
-## Current demo flow
+## Complete user flow
 
-1. Open the site.
-2. View token-locked products.
-3. Complete daily, profile, direct-link, and sharing activities.
-4. Build an approved token balance.
-5. Unlock a product when the approved balance reaches its requirement.
-6. Submit recipient and delivery details.
-7. Spend the required tokens.
-8. Create an order with the status `Awaiting admin review`.
+1. Open the starting page.
+2. Create a delivery-ready demo profile or explore the demo.
+3. Choose a product as the active goal.
+4. Share the unique referral link.
+5. Complete daily and direct-link tasks.
+6. Build approved tokens.
+7. Complete the product order checklist:
+   - Enough approved tokens
+   - Delivery profile completed
+   - At least 4 completed tasks
+   - At least 5 recorded share actions
+   - At least 3 verified referrals
+8. Open the unlocked product.
+9. Review the token cost and remaining balance.
+10. Enter recipient, phone, state, complete address and optional delivery note.
+11. Confirm the order and spend the required tokens.
+12. Track the order as `Awaiting admin stock and delivery review`.
+
+## Sharing and referral rule
+
+Sharing is a major earning activity, but opening WhatsApp does not prove that a private message was delivered.
+
+The current demo records:
+
+- 10 pending tokens for a recorded WhatsApp share action
+- 100 approved tokens for a simulated verified referral
+
+A production backend should award verified referral tokens only after a measurable event such as a unique visit, verified registration or required completed activity.
 
 ## Included demo features
 
+- Visible DEMO banner
+- Professional starting page
+- Delivery-profile onboarding
 - Approved and pending token balances
-- Product catalogue with token progress
-- Token-only product unlocking
-- WhatsApp referral sharing
-- Unique referral code per browser demo state
-- Configurable direct-link tasks
-- Return timers for direct-link tasks
-- Daily check-in task
-- Token activity history
-- Product order form
-- Order history and review status
-- Demo admin section for adding products and tasks
-- Local browser persistence using `localStorage`
-- Visible removable demo banner
+- Unique referral link
+- WhatsApp sharing
+- Verified-referral simulation
+- Daily check-in
+- Profile task
+- Configurable direct-link tasks with return timers
+- Large categorized product marketplace
+- Product search and category filters
+- Product photographs with fallbacks
+- Active product goal
+- Clear next-action guidance
+- Five-part order checklist
+- Token-only order confirmation
+- Recipient and full delivery-address form
+- Token deduction after order submission
+- Order IDs and order history
+- Demo Admin controls
+- Browser persistence with `localStorage`
 
-## Important verification rule
+## Demo Admin
 
-Opening a WhatsApp share button does not prove that a private message was delivered.
+The Demo Admin section can:
 
-The demo records a small pending share action. A production backend should award larger referral tokens only for measurable events such as:
-
-- Unique referral visit
-- Verified signup
-- First completed activity
-- Approved order or other configured milestone
-
-## Editing direct-link tasks
-
-Open **Demo Admin** inside the app and select **Add task**.
-
-Each direct-link task accepts:
-
-- Task title
-- Direct URL
-- Token reward
-- Required return timer
-
-For permanent default tasks, edit `DEFAULT_TASKS` in `index.html`.
-
-## Editing products
-
-Open **Demo Admin** and select **Add product**, or edit `DEFAULT_PRODUCTS` in `index.html`.
-
-Each product contains:
-
-- Name
-- Description
-- Emoji placeholder
-- Required token amount
-
-## Demo limitations
-
-This build stores everything on the current device only. It does not yet provide:
-
-- Real authentication
-- Cross-device accounts
-- Secure server-controlled balances
-- Verified referral attribution
-- Real stock management
-- Supplier fulfilment
-- Admin authentication
-- Fraud detection
-- Delivery integrations
+- Simulate a verified referral
+- Approve pending share tokens
+- Add direct-link tasks
+- Configure task rewards and return timers
+- Add products with categories, images and token requirements
+- Reset the browser demo
 
 ## Production advancement path
 
-The next production stage should move these areas to Supabase:
+The production version should move all sensitive activity to Supabase or another secure backend:
 
 - `profiles`
 - `products`
+- `inventory`
 - `tasks`
 - `task_completions`
+- `share_events`
 - `referral_events`
 - `token_ledger`
 - `orders`
 - `order_status_history`
+- `delivery_addresses`
 - `admin_users`
 
-Token balances should be calculated from an append-only server ledger. The browser must not directly decide or modify approved token balances.
+Approved balances should be calculated from a server-controlled append-only token ledger. The browser must not directly approve tokens, verify referrals or decide order eligibility.
+
+Production also needs:
+
+- Authentication and session persistence
+- Real referral attribution
+- Duplicate-account and self-referral protection
+- Device and rate-limit controls
+- Product stock management
+- Order review tools
+- Delivery-area rules
+- Supplier or fulfilment process
+- User notifications
+- Privacy policy and terms
+
+## Demo limitation
+
+This build stores test profiles, tokens and orders only on the current browser. Product images require internet access. No supplier receives an order and no real product delivery is promised by the demo.
 
 ## Demo cleanup rule
 
