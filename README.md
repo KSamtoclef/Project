@@ -1,114 +1,96 @@
 # MAIN Demo Marketplace
 
-MAIN is a demo-first earn-to-order product marketplace.
+MAIN is a demo-first, token-powered product ordering platform.
 
-Users choose a product goal, earn approved platform tokens through sharing, verified referrals and configured activities, complete an order checklist, and then submit a delivery request without paying money.
+Users choose a product goal, earn approved tokens mainly through sharing and configured tasks, complete the product requirements, and submit a token-only order for stock and delivery review.
 
-## Complete user flow
+## Public customer flow
 
 1. Open the starting page.
-2. Create a delivery-ready demo profile or explore the demo.
-3. Choose a product as the active goal.
-4. Share the unique referral link.
-5. Complete daily and direct-link tasks.
-6. Build approved tokens.
-7. Complete the product order checklist:
-   - Enough approved tokens
-   - Delivery profile completed
-   - At least 4 completed tasks
-   - At least 5 recorded share actions
-   - At least 3 verified referrals
-8. Open the unlocked product.
-9. Review the token cost and remaining balance.
-10. Enter recipient, phone, state, complete address and optional delivery note.
-11. Confirm the order and spend the required tokens.
-12. Track the order as `Awaiting admin stock and delivery review`.
+2. Create a demo profile or explore the catalogue.
+3. Choose one product as the active goal.
+4. Share the referral link and complete token tasks.
+5. Wait for pending share tokens to pass the clearly labelled demo review.
+6. Complete the required delivery profile, share count and task count.
+7. Reach the selected product’s approved-token requirement.
+8. Review the order checklist.
+9. Spend tokens and submit the delivery order.
+10. Track the order as `Awaiting admin stock and delivery review`.
 
-## Sharing and referral rule
+## Current public interface
 
-Sharing is a major earning activity, but opening WhatsApp does not prove that a private message was delivered.
+The customer navigation contains only:
 
-The current demo records:
+- Home
+- Products
+- Earn
+- Orders
 
-- 10 pending tokens for a recorded WhatsApp share action
-- 100 approved tokens for a simulated verified referral
+There is no public admin button, admin screen, product editor, task editor, referral simulator or reset control.
 
-A production backend should award verified referral tokens only after a measurable event such as a unique visit, verified registration or required completed activity.
+Administration will be built later as a separate authenticated route with server-enforced permissions. Removing an admin link from the public interface is not by itself security; production security must be enforced by the backend.
 
-## Included demo features
+## Demo catalogue
 
-- Visible DEMO banner
-- Professional starting page
-- Delivery-profile onboarding
-- Approved and pending token balances
-- Unique referral link
-- WhatsApp sharing
-- Verified-referral simulation
-- Daily check-in
-- Profile task
-- Configurable direct-link tasks with return timers
-- Large categorized product marketplace
-- Product search and category filters
-- Product photographs with fallbacks
-- Active product goal
-- Clear next-action guidance
-- Five-part order checklist
-- Token-only order confirmation
-- Recipient and full delivery-address form
-- Token deduction after order submission
-- Order IDs and order history
-- Demo Admin controls
-- Browser persistence with `localStorage`
+`assets/js/demo-catalog.js` generates 1,000 organized demo products across 20 categories.
 
-## Demo Admin
+Each product contains:
 
-The Demo Admin section can:
+- Product ID
+- Product name
+- Category
+- Visible product tags
+- Demo description
+- Product image and emoji fallback
+- Token requirement
+- Promotional badge
+- Demo inventory marker
 
-- Simulate a verified referral
-- Approve pending share tokens
-- Add direct-link tasks
-- Configure task rewards and return timers
-- Add products with categories, images and token requirements
-- Reset the browser demo
+The catalogue uses search, category filters and progressive loading. It does not render all 1,000 product cards at once, which keeps mobile performance reasonable.
 
-## Production advancement path
+The products are generated demo stock. They are not copied live listings and must not be presented as confirmed inventory.
 
-The production version should move all sensitive activity to Supabase or another secure backend:
+## Token and order requirements
 
-- `profiles`
-- `products`
-- `inventory`
-- `tasks`
-- `task_completions`
-- `share_events`
-- `referral_events`
-- `token_ledger`
-- `orders`
-- `order_status_history`
-- `delivery_addresses`
-- `admin_users`
+The current demo requires:
 
-Approved balances should be calculated from a server-controlled append-only token ledger. The browser must not directly approve tokens, verify referrals or decide order eligibility.
+- Enough approved tokens for the selected product
+- A completed delivery profile
+- At least 5 recorded share actions
+- At least 4 completed tasks
 
-Production also needs:
+Sharing is the main earning activity. Each WhatsApp share records 120 pending demo tokens. Those tokens enter a short, clearly labelled demo review before approval. MAIN cannot inspect private WhatsApp messages.
 
-- Authentication and session persistence
-- Real referral attribution
-- Duplicate-account and self-referral protection
-- Device and rate-limit controls
-- Product stock management
-- Order review tools
-- Delivery-area rules
-- Supplier or fulfilment process
-- User notifications
-- Privacy policy and terms
+Production referral rewards should be based on server-verifiable events such as:
 
-## Demo limitation
+- Unique referral visit
+- Verified signup
+- First completed activity
+- Approved referral milestone
 
-This build stores test profiles, tokens and orders only on the current browser. Product images require internet access. No supplier receives an order and no real product delivery is promised by the demo.
+## Demo limitations
+
+This version uses browser `localStorage`. It does not yet provide:
+
+- Secure authentication
+- Cross-device accounts
+- Server-controlled token balances
+- Real referral verification
+- Confirmed product inventory
+- Supplier fulfilment
+- Delivery integrations
+- Protected administration
+- Fraud detection
+
+Production balances should come from an append-only server token ledger. The browser must never have authority to award approved tokens or approve orders.
+
+## Main files
+
+- `index.html` — public customer marketplace and complete demo flow
+- `assets/js/demo-catalog.js` — scalable 1,000-product demo catalogue
 
 ## Demo cleanup rule
 
-The visible demo banner must remain until the project owner explicitly says:
+The yellow demo banner remains until the project owner explicitly says:
 
 `APPROVE PRODUCTION CLEANUP`
