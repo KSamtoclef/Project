@@ -24,7 +24,7 @@ const categories=[
 ];
 const modifiers=['Classic','Premium','Essential','Smart','Compact','Plus','Max','Pro','Lite','Modern'];
 const colors=['Black','White','Blue','Silver','Gold','Red','Purple','Green','Grey','Rose'];
-const badges=['Popular','Trending','New arrival','Top goal','Member pick','Limited demo'];
+const badges=['Popular','Trending','New arrival','Top goal','Member pick','Limited offer'];
 const products=[];
 for(let i=0;i<1000;i++){
  const category=categories[i%categories.length];
@@ -35,18 +35,94 @@ for(let i=0;i<1000;i++){
  const tokens=500+((i*137)%14500)+tier*45;
  const tags=[category.tags[i%category.tags.length],category.tags[(i+2)%category.tags.length],color];
  products.push({
-  id:`demo-product-${String(i+1).padStart(4,'0')}`,
+  id:`orderproduct-${String(i+1).padStart(4,'0')}`,
   name:`${modifier} ${base} ${color}`,
-  description:`Demo ${category.name.toLowerCase()} product with organized token-based ordering requirements.`,
+  description:`Organized ${category.name.toLowerCase()} product with token-based ordering requirements.`,
   category:category.name,
   emoji:category.emoji,
   image:`${category.image}&sig=${i+1}`,
   tokens,
   badge:badges[i%badges.length],
-  tags,
-  demo:true
+  tags
  });
 }
 window.MAIN_DEMO_PRODUCTS=Object.freeze(products);
 window.MAIN_DEMO_CATEGORIES=Object.freeze(['All',...categories.map(item=>item.name)]);
+
+const BRAND='orderproduct';
+const cleanText=value=>String(value)
+ .replace(/MAIN Demo/gi,BRAND)
+ .replace(/\bMAIN\b/g,BRAND)
+ .replace(/demo marketplace/gi,'marketplace')
+ .replace(/demo profile/gi,'profile')
+ .replace(/demo products?/gi,match=>match.toLowerCase().endsWith('s')?'products':'product')
+ .replace(/demo verification/gi,'verification')
+ .replace(/demo review/gi,'review')
+ .replace(/demo rewards/gi,'rewards')
+ .replace(/demo activity/gi,'activity')
+ .replace(/demo order/gi,'order')
+ .replace(/demo data/gi,'data')
+ .replace(/\bDemo\b\s*/g,'')
+ .replace(/\s{2,}/g,' ')
+ .trim();
+
+function isTopBanner(node){
+ const element=node.nodeType===Node.ELEMENT_NODE?node:node.parentElement;
+ return Boolean(element?.closest('.demo'));
+}
+function cleanNode(root){
+ if(!root||isTopBanner(root))return;
+ if(root.nodeType===Node.TEXT_NODE){
+  const next=cleanText(root.nodeValue);
+  if(next!==root.nodeValue)root.nodeValue=next;
+  return;
+ }
+ if(root.nodeType!==Node.ELEMENT_NODE&&root.nodeType!==Node.DOCUMENT_FRAGMENT_NODE)return;
+ if(root.nodeType===Node.ELEMENT_NODE){
+  ['placeholder','title','aria-label'].forEach(name=>{
+   if(root.hasAttribute?.(name)){
+    const current=root.getAttribute(name),next=cleanText(current);
+    if(next!==current)root.setAttribute(name,next);
+   }
+  });
+ }
+ const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+ const nodes=[];
+ while(walker.nextNode())nodes.push(walker.currentNode);
+ nodes.forEach(node=>{if(!isTopBanner(node)){const next=cleanText(node.nodeValue);if(next!==node.nodeValue)node.nodeValue=next;}});
+ root.querySelectorAll?.('[placeholder],[title],[aria-label]').forEach(element=>{
+  if(isTopBanner(element))return;
+  ['placeholder','title','aria-label'].forEach(name=>{
+   if(element.hasAttribute(name)){
+    const current=element.getAttribute(name),next=cleanText(current);
+    if(next!==current)element.setAttribute(name,next);
+   }
+  });
+ });
+}
+function applyBranding(){
+ document.title='orderproduct — Earn Tokens, Unlock Products';
+ document.querySelector('.brand h1')?.replaceChildren(BRAND);
+ const logo=document.querySelector('.logo');if(logo)logo.textContent='O';
+ cleanNode(document.body);
+}
+
+const originalOpen=window.open.bind(window);
+window.open=(url,...args)=>{
+ let next=url;
+ if(typeof url==='string'&&url.includes('wa.me/?text=')){
+  const marker='wa.me/?text=';
+  const at=url.indexOf(marker)+marker.length;
+  try{next=url.slice(0,at)+encodeURIComponent(cleanText(decodeURIComponent(url.slice(at))));}catch{}
+ }
+ return originalOpen(next,...args);
+};
+
+applyBranding();
+const observer=new MutationObserver(records=>records.forEach(record=>{
+ if(record.type==='characterData')cleanNode(record.target);
+ record.addedNodes.forEach(cleanNode);
+}));
+observer.observe(document.documentElement,{subtree:true,childList:true,characterData:true});
+document.addEventListener('DOMContentLoaded',applyBranding,{once:true});
 })();
